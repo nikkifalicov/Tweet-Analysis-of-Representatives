@@ -79,6 +79,22 @@ class PartyClassifier:
         test_predictions = model.predict(features_test)
         error = mean_squared_error(labels_test, test_predictions)
         return error
+
+
+    def _model_with_names(self, test_data_size = 0.2):
+        filtered = self._data.loc[:, ['state', 'text', 'party', 'name']]
+        filtered = filtered.dropna()
+        features = filtered.loc[:, filtered.columns != 'party']
+        features = pd.get_dummies(features)
+        labels = filtered['party']
+
+        features_train, features_test, labels_train, labels_test =\
+            train_test_split(features, labels, test_size=test_data_size)
+        model = DecisionTreeClassifier()
+        model.fit(features_train, labels_train)
+        test_predictions = model.predict(features_test)
+        error = mean_squared_error(labels_test, test_predictions)
+        return error
     
     def main():
         #pass in the tweet test sets
