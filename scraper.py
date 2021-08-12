@@ -127,8 +127,8 @@ class Scraper:
         """
         print(self._df)
 
-    def to_csv(self):
+    def to_csv(self, file_name):
         """
         Sends the DataFrame to a csv file
         """
-        self._df.to_csv('tweet_data', index=False)
+        self._df.to_csv(file_name, index=False)
