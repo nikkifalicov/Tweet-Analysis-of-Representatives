@@ -8,7 +8,6 @@ the scraped data
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import mean_squared_error
-from sklearn.base import clone
 from scraper import Scraper
 from operator import itemgetter
 import pandas as pd
@@ -24,7 +23,8 @@ class PartyClassifier:
     
     def __init__(self, data):
         """
-        takes in a pandas dataframe
+        initializes a new PartyClassifier object. Takes in a pandas dataframe
+        of csv data.
         """
         self._data = data
         #possibly clean text here if needed
@@ -86,5 +86,3 @@ class PartyClassifier:
 
     if __name__ == '__main__':
         main()
-
-    
