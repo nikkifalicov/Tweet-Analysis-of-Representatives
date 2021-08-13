@@ -8,6 +8,8 @@ in the dataframe
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
+from textblob import TextBlob
+import aggs
 from operator import itemgetter
 import pandas as pd
 
@@ -26,7 +28,7 @@ class PartyClassifier:
     """
     Uses machine learning to classify tweets from different political representatives
     during the month of July 2021. Contains functionality to compare different train/test
-    split ratios and their outcomes, as well as the mean squared error of the model.
+    split ratios and their outcomes, as well as the accuracy score of the model.
     """
     
     def __init__(self, data):
@@ -44,17 +46,21 @@ class PartyClassifier:
         """
         return self._data.columns
     
-    def compare_outcomes(self, features, labels):
+    def add_tweet_polarity(self):
+        #go through each tweet, get polarity and subjectivity, add in the columns
+        self._data['polarity'] = self._data['text'].apply(lambda x: TextBlob(x).sentiment.polarity)
+    
+    def _compare_outcomes(self):
         """
-        compare_outcomes(features, labels) takes in a list of features and labels
-        for the current PartyClassifier objects' dataframe, and returns a list of
-        tuples in format (mean squared error, split). This list is sorted from least
-        to greatest based on mean squared error.
+        compare_outcomes() compares outcomes for different train/test splits
+        and returns a list of tuples in format (accuracy score, split).
+        This list is sorted from greatest to least based on accuracy score.
         """
         # make list of the various test sizes from 0.1 to 0.9
         test_sizes = [x/10 for x in range(1, 10)]
         outcomes = []
-        features = pd.get_dummies(features)
+        features = pd.get_dummies(self._data.loc[:, ['state', 'text']])
+        labels = self._data['party']
         for test_data_size in test_sizes:
             # general algorithm: create a decision tree, and split the data
             # according the current iteration through test size. train and
@@ -68,13 +74,13 @@ class PartyClassifier:
             error = accuracy_score(labels_test, test_predictions)
             outcomes.append((error, test_data_size))
         #sort the outcomes by the smallest error
-        sorted_outcomes = sorted(outcomes, key=itemgetter(0))
+        sorted_outcomes = sorted(outcomes, key=itemgetter(0), reverse=True)
         return sorted_outcomes
 
     def fit_and_predict_party(self, test_data_size = 0.2):
         """
         fit_and_predict_party(test_data_size) takes in a test data size
-        (from 0 to 1 inclusive), and returns the mean squared error
+        (from 0 to 1 inclusive), and returns the accuracy score
         of the machine learning model fitted and predicted on that 
         train/test split. The default value for test data size is 0.2,
         signifying a 80%/20% training/testing data split.
@@ -102,7 +108,7 @@ class PartyClassifier:
         """
         _model_with_names(test_data_size) is a private method designed to
         test the inclusion of names as a feature. takes in a test data size
-        (from 0 to 1 inclusive), and returns the mean squared error
+        (from 0 to 1 inclusive), and returns the accuracy score
         of the machine learning model fitted and predicted on that 
         train/test split. The default value for test data size is 0.2,
         signifying a 80%/20% training/testing data split.
