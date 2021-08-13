@@ -10,6 +10,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 from textblob import TextBlob
 import aggs
+import re
 from operator import itemgetter
 import pandas as pd
 
@@ -36,7 +37,7 @@ class PartyClassifier:
         initializes a new PartyClassifier object. Takes in a pandas dataframe
         of csv data.
         """
-        self._data = data
+        self._data = data.dropna()
         #possibly clean text here if needed
     
     def get_column_names(self):
@@ -48,7 +49,13 @@ class PartyClassifier:
     
     def add_tweet_polarity(self):
         #go through each tweet, get polarity and subjectivity, add in the columns
-        self._data['polarity'] = self._data['text'].apply(lambda x: TextBlob(x).sentiment.polarity)
+        self._data['polarity'] = self._data['text'].copy().apply(lambda x: TextBlob(x).sentiment.polarity)#self._get_polarity(x))
+    
+    def _get_polarity(self, text):
+        cleaned = ''
+        for word in text.split():
+            cleaned = cleaned + re.sub(r'\W+', '', word)
+        return TextBlob(cleaned).sentiment.polarity
     
     def _compare_outcomes(self):
         """
@@ -85,7 +92,7 @@ class PartyClassifier:
         train/test split. The default value for test data size is 0.2,
         signifying a 80%/20% training/testing data split.
         """
-        filtered = self._data.loc[:, ['state', 'text', 'party']]
+        filtered = self._data.loc[:, ['state', 'text', 'party', 'polarity']]
         filtered = filtered.dropna()
         features = filtered.loc[:, filtered.columns != 'party']
         features = pd.get_dummies(features)
@@ -113,7 +120,7 @@ class PartyClassifier:
         train/test split. The default value for test data size is 0.2,
         signifying a 80%/20% training/testing data split.
         """
-        filtered = self._data.loc[:, ['state', 'text', 'party', 'name']]
+        filtered = self._data.loc[:, ['name', 'state', 'text', 'party', 'polarity']] #polarity decreases accuracy, overfitting
         filtered = filtered.dropna()
         features = filtered.loc[:, filtered.columns != 'party']
         features = pd.get_dummies(features)
