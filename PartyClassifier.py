@@ -7,12 +7,15 @@ in the dataframe
 """
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import mean_squared_error
-from scraper import Scraper
+from sklearn.metrics import accuracy_score
 from operator import itemgetter
 import pandas as pd
 
 """
+still need to do text analysis, maybe with textblob or if anyone else has written
+some stuff already that can be used to go through the text
+extract the noun phrases, subjectivity, polarity, hashtags, etc.
+can possibly use aggs.py
 contents (approximate):
 - make a machine learning model (decision tree classifier)
 - compare outcomes of machine learning models
@@ -51,6 +54,7 @@ class PartyClassifier:
         # make list of the various test sizes from 0.1 to 0.9
         test_sizes = [x/10 for x in range(1, 10)]
         outcomes = []
+        features = pd.get_dummies(features)
         for test_data_size in test_sizes:
             # general algorithm: create a decision tree, and split the data
             # according the current iteration through test size. train and
@@ -61,7 +65,7 @@ class PartyClassifier:
                 train_test_split(features, labels, test_size=test_data_size)
             model_test.fit(features_train, labels_train)
             test_predictions = model_test.predict(features_test)
-            error = mean_squared_error(labels_test, test_predictions)
+            error = accuracy_score(labels_test, test_predictions)
             outcomes.append((error, test_data_size))
         #sort the outcomes by the smallest error
         sorted_outcomes = sorted(outcomes, key=itemgetter(0))
@@ -80,14 +84,18 @@ class PartyClassifier:
         features = filtered.loc[:, filtered.columns != 'party']
         features = pd.get_dummies(features)
         labels = filtered['party']
-
+        
         features_train, features_test, labels_train, labels_test =\
             train_test_split(features, labels, test_size=test_data_size)
         model = DecisionTreeClassifier()
         model.fit(features_train, labels_train)
-        test_predictions = model.predict(features_test)
-        error = mean_squared_error(labels_test, test_predictions)
-        return error
+
+        pred_train = model.predict(features_train)
+        train_acc = accuracy_score(labels_train, pred_train)
+
+        pred_test = model.predict(features_test)
+        #test_acc = accuracy_score(labels_test, pred_test)
+        return accuracy_score(labels_test, pred_test)
 
 
     def _model_with_names(self, test_data_size = 0.2):
@@ -110,12 +118,5 @@ class PartyClassifier:
         model = DecisionTreeClassifier()
         model.fit(features_train, labels_train)
         test_predictions = model.predict(features_test)
-        error = mean_squared_error(labels_test, test_predictions)
+        error = accuracy_score(labels_test, test_predictions)
         return error
-    
-    def main():
-        #pass in the tweet test sets
-        print('Objects need to be created for testing/analyses')
-
-    if __name__ == '__main__':
-        main()
