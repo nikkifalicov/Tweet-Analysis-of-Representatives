@@ -7,7 +7,8 @@ Aggs: a file with functions to facilitate the computation of aggregate statistic
 import re
 import pandas as pd
 from textblob import TextBlob
-from textblob import Word
+from textblob import WordList
+from collections import Counter
 
 
 class Aggregator:
@@ -15,20 +16,41 @@ class Aggregator:
     def __init__(self, data):
         data.astype({'text': 'TextBlob'})
         self._data = data
+
+        self._dem_words = self._get_dem_words(data)
+        self._repub_words = self._get_rep_words(data)
+        self._all_words = self._dem_words.join(self._repub_words)
+
         self._dem_hashtags, self._repub_hashtags = self._get_hashtags(data)
         self._all_hashtags = {'Democrats' : self._dem_hashtags,
                               'Republicans' : self._repub_hashtags}
+    
         self._dem_tags, self._repub_tags = self._get_tags(data)
         self._all_tags = {'Democrats' : self._dem_tags,
                          'Republicans': self._repub_tags}
         
         # went ahead and made these top 10
         # if we want top 5, we can just select [0:4]
-        self._top_ten = []
-        self._top_ten_dems = []
-        self._top_ten_reps = []
+        # will map each word to its occurrence
+        self._top_ten = self._top_tens(self._all_words)
+        self._top_ten_dems = self._top_tens(self._dem_words)
+        self._top_ten_reps = self._top_tens(self._repub_words)
 
 # private functions (mostly for the initializer)
+    def _get_dem_words(self, data):
+        dems = TextBlob("")
+        dem_data = data[['party'] == 'D'][['text']]
+        for tweet in dem_data:
+            dems.join(tweet)
+        return dems.words
+
+    def _get_rep_words(self, data):
+        reps = TextBlob("")
+        rep_data = data[['party'] == 'R'][['text']]
+        for tweet in rep_data:
+            reps.join(tweet)
+        return reps.words
+
     def _get_hashtags(self, data):
         """
         Returns two lists, one of Democrat-used hashtags and one of Republican-used hashtags.
@@ -75,15 +97,15 @@ class Aggregator:
 
         return list(dem_tags), list(repub_tags)
 
-    def _top_tens(self, data):
-        is_repub = data['party'] == 'R'
-        is_dem = data['party'] == 'D'
+    def _top_tens(self, field):
+        result = {}
+        top_10 = Counter(field).most_common(10)
 
-        all_tweets = data[['text']]
-        repub_tweets = data[is_repub][['text']]
-        dem_tweets = data[is_dem][['text']]
-
-        pd.Series(' '.join(df['text']).lower().split()).value_counts()[:100]
+        for word in top_10:
+            freq = field.count(word)
+            result[word] = freq
+        
+        return result
 
 # functions here
     # def normalize(term):
@@ -172,7 +194,7 @@ class Aggregator:
         return self._top_ten_dems[0:4]
     
     def repub_top_ten(self):
-        return self._top_ten_repubs
+        return self._top_ten_reps
 
     def repub_top_five(self):
-        return self._top_ten_repubs[0:4]
+        return self._top_ten_reps[0:4]
