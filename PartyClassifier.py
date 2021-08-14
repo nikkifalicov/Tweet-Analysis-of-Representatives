@@ -38,7 +38,9 @@ class PartyClassifier:
         of csv data.
         """
         self._data = data.dropna()
-        #possibly clean text here if needed
+        self._add_tweet_polarity()
+        self._add_noun_phrases()
+        self._add_tweet_subjectivity
     
     def get_column_names(self):
         """
@@ -47,15 +49,15 @@ class PartyClassifier:
         """
         return self._data.columns
     
-    def add_tweet_polarity(self):
+    def _add_tweet_polarity(self):
         #go through each tweet, get polarity and subjectivity, add in the columns
-        self._data['polarity'] = self._data['text'].copy().apply(lambda x: TextBlob(x).sentiment.polarity)#self._get_polarity(x))
+        self._data['polarity'] = self._data['text'].copy().apply(lambda x: TextBlob(x).sentiment.polarity)
     
-    def _get_polarity(self, text):
-        cleaned = ''
-        for word in text.split():
-            cleaned = cleaned + re.sub(r'\W+', '', word)
-        return TextBlob(cleaned).sentiment.polarity
+    def _add_tweet_subjectivity(self):
+        self._data['subjectivity'] = self._data['text'].copy().apply(lambda x: TextBlob(x).sentiment.subjectivity)
+    
+    def _add_noun_phrases(self):
+        self._data['noun_phrases'] = self._data['text'].copy().apply(lambda x: TextBlob(x).noun_phrases)
     
     def _compare_outcomes(self):
         """
@@ -66,7 +68,7 @@ class PartyClassifier:
         # make list of the various test sizes from 0.1 to 0.9
         test_sizes = [x/10 for x in range(1, 10)]
         outcomes = []
-        features = pd.get_dummies(self._data.loc[:, ['state', 'text']])
+        features = pd.get_dummies(self._data.loc[:, ['state', 'text', 'polarity', 'subjectivity', 'noun_phrases']])
         labels = self._data['party']
         for test_data_size in test_sizes:
             # general algorithm: create a decision tree, and split the data
