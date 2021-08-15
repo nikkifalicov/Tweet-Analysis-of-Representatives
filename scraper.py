@@ -129,6 +129,6 @@ class Scraper:
 
     def to_csv(self, file_name):
         """
-        Sends the DataFrame to a csv file.
+        Sends the DataFrame to a CSV file.
         """
         self._df.to_csv(file_name, index=False)
