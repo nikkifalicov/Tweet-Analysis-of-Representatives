@@ -4,6 +4,12 @@ CSE 163 AB
 This class takes in scraped TweetCongress data in CSV format, and generates a
 machine learning model to try and predict political party based on the various
 labels present in the dataframe
+
+Necessary imports:
+- sklearn
+- TextBlob --> https://textblob.readthedocs.io/en/dev/install.html
+- operator
+- pandas
 """
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
@@ -27,9 +33,9 @@ class PartyClassifier:
         data, containing scraped tweet data.
         """
         self._data = data.dropna()
-        self._data['polarity'] = self._data['text'].copy().apply(
+        self._data.loc[:, 'polarity'] = self._data['text'].apply(
             lambda x: TextBlob(x).sentiment.polarity)
-        self._data['subjectivity'] = self._data['text'].copy().apply(
+        self._data.loc[:, 'subjectivity'] = self._data['text'].apply(
             lambda x: TextBlob(x).sentiment.subjectivity)
 
     def get_column_names(self):
