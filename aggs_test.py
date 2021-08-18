@@ -81,7 +81,7 @@ def test_top10s_functions(agg):
 
 
 def main():
-    agg = Aggregator(DATA)
+    agg = Aggregator(pd.read_csv(DATA))
     print("Aggregator successfully initialized.")
     print()
 
