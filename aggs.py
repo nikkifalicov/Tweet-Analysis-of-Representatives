@@ -37,6 +37,7 @@ class Aggregator:
           appear in the dataset and all words, hashtags, and tags that
           are used by both parties.
         """
+        data = data.dropna()
         data['text'] = data['text'].apply(TextBlob)
 
         self._data = data
