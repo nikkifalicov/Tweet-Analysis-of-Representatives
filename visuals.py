@@ -19,8 +19,11 @@ import matplotlib.pyplot as plt
 from aggs import Aggregator
 
 
-DATA = "tweet_data1.csv"
-ACC_VS_SPLIT = "accuracy_vs_split_data.csv"
+DATA1 = pd.read_csv("tweet_data1.csv")
+DATA2 = pd.read_csv("tweet_data2.csv")
+DATA3 = pd.read_csv("tweet_data3.csv")
+DATA_FULL = [DATA1, DATA2, DATA3]
+ACC_VS_SPLIT = pd.read_csv("accuracy_vs_split_data.csv")
 
 
 def accuracy_vs_split(data):
@@ -164,7 +167,7 @@ def most_used_tags(republicans, democrats, both):
 
 
 def main():
-    aggs = Aggregator(DATA)
+    aggs = Aggregator(pd.concat(DATA_FULL))
 
     r_hashtags = aggs.rep_hashtags
     d_hashtags = aggs.dem_hashtags
