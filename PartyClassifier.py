@@ -32,10 +32,11 @@ class PartyClassifier:
         initializes a new PartyClassifier object. Takes in a pandas dataframe,
         data, containing scraped tweet data.
         """
-        self._data = data.dropna()
-        self._data.loc[:, 'polarity'] = self._data['text'].apply(
+        self._data = data.dropna().copye()
+        text = self._data['text']
+        self._data.loc[:, 'polarity'] = text.apply(
             lambda x: TextBlob(x).sentiment.polarity)
-        self._data.loc[:, 'subjectivity'] = self._data['text'].apply(
+        self._data.loc[:, 'subjectivity'] = text.apply(
             lambda x: TextBlob(x).sentiment.subjectivity)
 
     def get_column_names(self):
@@ -64,21 +65,30 @@ class PartyClassifier:
         return sorted_outcomes
 
     def fit_and_predict_party(self, test_data_size=0.2,
-                              include_names=False):
+                              include_names=True, include_state=True,
+                              include_sentiment=True):
         """
-        fit_and_predict_party(test_data_size=0.2, include_names=False) takes
+        fit_and_predict_party(test_data_size=0.2, include_names=True
+        , include_state=True, include_sentiment=True) takes
         in a test data size (b/t 0 and 1 inclusive) and and whether or not
-        to include names as a feature, and returns the accuracy score for
+        to include various features, and returns the accuracy score for
         training data and testing data, in format training_accuracy,
         testing_accuracy. The default value for test_data_size is 0.2,
         indicating a 80%/20% split between training and testing data
-        (respectively). include_names has a default value of False.
+        (respectively). default values for include_names, include_state,
+        and include_sentiment are True. Assumed that only one of include_names
+        ,include_state, and include_sentiment is False at any one given time.
         """
-        if include_names:
-            filtered = self._data.loc[:, ['name', 'state', 'text', 'party',
+        if include_names is False:
+            filtered = self._data.loc[:, ['text', 'party', 'state',
                                           'polarity', 'subjectivity']]
+        elif include_state is False:
+            filtered = self._data.loc[:, ['name', 'text', 'party',
+                                          'polarity', 'subjectivity']]
+        elif include_sentiment is False:
+            filtered = self._data.loc[:, ['name', 'text', 'party', 'state']]
         else:
-            filtered = self._data.loc[:, ['state', 'text', 'party',
+            filtered = self._data.loc[:, ['name', 'state', 'text', 'party',
                                           'polarity', 'subjectivity']]
         filtered = filtered.dropna()
         features = filtered.loc[:, filtered.columns != 'party']
