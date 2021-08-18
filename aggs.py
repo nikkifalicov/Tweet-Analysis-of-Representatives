@@ -2,42 +2,75 @@
 Suh Young Choi
 CSE 163 AB
 
-Aggs: a file with functions to facilitate the computation of aggregate statistics and data insights.
+The Aggregator class creates an object which can compute and return
+aggregate statistics about a given dataset describing the tweets of US
+Representatives.
+
+Necessary imports:
+- TextBlob --> https://textblob.readthedocs.io/en/dev/install.html
+- collections
 """
-import re
-import pandas as pd
 from textblob import TextBlob
-from textblob import WordList
 from collections import Counter
 
 
 class Aggregator:
+    """
+    An Aggregator contains functionality to compute and return
+    different aggregate statistics about a dataset of scraped
+    tweets from TweetCongress on US Representatives, such as
+    the most-used words, hashtags, and tags by the Democratic
+    and Republican parties. The Aggregator casts the column of
+    tweets into TextBlob objects to facilitate natural language
+    processing.
+    """
 
     def __init__(self, data):
-        data.astype({'text': 'TextBlob'})
+        """
+        Implements an initializer for the class Aggregator. Takes
+        in a CSV of data. Sets up the following:
+
+        - separate lists for all words, hashtags, and tags that appear
+          in the dataset and all words, hashtags, and tags that are used
+          by both parties.
+        - separate lists for the top 10 words, hashtags, and tags that
+          appear in the dataset and all words, hashtags, and tags that
+          are used by both parties.
+        """
+        data['text'] = data['text'].apply(TextBlob)
+
         self._data = data
 
         self._dem_words = self._get_dem_words(data)
-        self._repub_words = self._get_rep_words(data)
-        self._all_words = self._dem_words.join(self._repub_words)
+        self._rep_words = self._get_rep_words(data)
+        self._all_words = self._dem_words.join(self._rep_words)
 
-        self._dem_hashtags, self._repub_hashtags = self._get_hashtags(data)
-        self._all_hashtags = {'Democrats' : self._dem_hashtags,
-                              'Republicans' : self._repub_hashtags}
-    
-        self._dem_tags, self._repub_tags = self._get_tags(data)
-        self._all_tags = {'Democrats' : self._dem_tags,
-                         'Republicans': self._repub_tags}
-        
-        # went ahead and made these top 10
-        # if we want top 5, we can just select [0:4]
-        # will map each word to its occurrence
-        self._top_ten = self._top_tens(self._all_words)
-        self._top_ten_dems = self._top_tens(self._dem_words)
-        self._top_ten_reps = self._top_tens(self._repub_words)
+        self._dem_hashtags, self._rep_hashtags = self._get_hashtags(data)
+        self._all_hashtags = {'Democrats': self._dem_hashtags,
+                              'Republicans': self._rep_hashtags}
 
-# private functions (mostly for the initializer)
+        self._dem_tags, self._rep_tags = self._get_tags(data)
+        self._all_tags = {'Democrats': self._dem_tags,
+                          'Republicans': self._rep_tags}
+
+        self._top_ten_words = self._top_tens(self._all_words)
+        self._top_ten_dems_words = self._top_tens(self._dem_words)
+        self._top_ten_reps_words = self._top_tens(self._rep_words)
+
+        self._top_ten_hashtags = self._top_tens(self._all_hashtags)
+        self._top_ten_dems_hashtags = self._top_tens(self._dem_hashtags)
+        self._top_ten_reps_hashtags = self._top_tens(self._rep_hashtags)
+
+        self._top_ten_tags = self._top_tens(self._all_tags)
+        self._top_ten_dems_tags = self._top_tens(self._dem_tags)
+        self._top_ten_reps_tags = self._top_tens(self._rep_tags)
+
     def _get_dem_words(self, data):
+        """
+        A helper function to the Aggregator class that takes in the
+        given dataset and returns a list of all the words used by
+        Democratic Representatives in a WordList of TextBlob objects.
+        """
         dems = TextBlob("")
         dem_data = data[['party'] == 'D'][['text']]
         for tweet in dem_data:
@@ -45,6 +78,11 @@ class Aggregator:
         return dems.words
 
     def _get_rep_words(self, data):
+        """
+        A helper function to the Aggregator class that takes in the
+        given dataset and returns a list of all the words used by
+        Republican Representatives in a WordList of TextBlob objects.
+        """
         reps = TextBlob("")
         rep_data = data[['party'] == 'R'][['text']]
         for tweet in rep_data:
@@ -53,73 +91,74 @@ class Aggregator:
 
     def _get_hashtags(self, data):
         """
-        Returns two lists, one of Democrat-used hashtags and one of Republican-used hashtags.
+        A helper function to the Aggregator class that takes in the
+        given dataset and returns two lists, one of Democrat-used
+        hashtags and one of Republican-used hashtags.
         """
-        is_repub = data['party'] == 'R'
+        is_rep = data['party'] == 'R'
         is_dem = data['party'] == 'D'
 
-        repub_tweets = data[is_repub][['text']]
+        rep_tweets = data[is_rep][['text']]
         dem_tweets = data[is_dem][['text']]
 
-        repub_hashtags = set()
+        rep_hashtags = set()
         dem_hashtags = set()
 
-        for tweet in repub_tweets:
-            hashtags = count_hashtags(tweet)
-            repub_hashtags.update(hashtags)
-        
+        for tweet in rep_tweets:
+            hashtags = self.hashtags(tweet)
+            rep_hashtags.update(hashtags)
+
         for tweet in dem_tweets:
-            hashtags = count_hashtags(tweet)
+            hashtags = self.hashtags(tweet)
             dem_hashtags.update(hashtags)
 
-        return list(dem_hashtags), list(repub_hashtags)
+        return list(dem_hashtags), list(rep_hashtags)
 
     def _get_tags(self, data):
         """
-        Returns two lists, one of Democrat-used tags and one of Republican-used tags.
+        A helper function to the Aggregator class that takes in the
+        given dataset and returns two lists, one of Democrat-used
+        tags and one of Republican-used tags.
         """
-        is_repub = data['party'] == 'R'
+        is_rep = data['party'] == 'R'
         is_dem = data['party'] == 'D'
 
-        repub_tweets = data[is_repub][['text']]
+        rep_tweets = data[is_rep][['text']]
         dem_tweets = data[is_dem][['text']]
 
-        repub_tags = set()
+        rep_tags = set()
         dem_tags = set()
 
-        for tweet in repub_tweets:
-            tags = count_tags(tweet)
-            repub_tags.update(tags)
-        
+        for tweet in rep_tweets:
+            tags = self.tags(tweet)
+            rep_tags.update(tags)
+
         for tweet in dem_tweets:
-            tags = count_tags(tweet)
+            tags = self.tags(tweet)
             dem_tags.update(tags)
 
-        return list(dem_tags), list(repub_tags)
+        return list(dem_tags), list(rep_tags)
 
     def _top_tens(self, field):
+        """
+        A helper function to the Aggregator class that takes in a one-
+        dimensional dataframe and returns the 10 most commonly-found
+        objects in that dataframe. Used to find the top 10 most commonly-
+        used words, tags, and hashtags across both parties.
+        """
         result = {}
         top_10 = Counter(field).most_common(10)
 
         for word in top_10:
             freq = field.count(word)
             result[word] = freq
-        
+
         return result
-
-# functions here
-    # def normalize(term):
-    #     """
-    #     Normalizes a single word by changing it to lowercase and removing all punctuation. 
-    #     """
-    #     term = term.lower()
-    #     term = re.sub(r'\W+', '', term)
-
-    #     return term
 
     def most_freq_word_per_tweet(tweet):
         """
-        Takes in a tweet and returns the most frequently occurring word in the tweet
+        Takes in a tweet and returns the most frequently occurring
+        word in the tweet.
         """
         uniques = (tweet.words)
         highest_freq = 0
@@ -131,18 +170,7 @@ class Aggregator:
                 most_freq_word = word
         return most_freq_word
 
-    def top_five_words_tweet(tweet):
-        """
-        Takes in a tweet and returns the five most-occurring words in that tweet.
-        """
-        words = {}
-        uniques = set(tweet.words)
-        for word in uniques:
-            words[word] = tweet.words.count(word)
-        sorted_words = dict(sorted(words.items(), key=lambda item: item[1]))
-        return sorted_words.keys()[0:4]
-
-    def count_hashtags(tweet):
+    def hashtags(tweet):
         """
         Takes in a tweet and returns the set of unique hashtags in the tweet.
         """
@@ -152,7 +180,7 @@ class Aggregator:
                 hashtags.add(word)
         return hashtags
 
-    def count_tags(tweet):
+    def tags(tweet):
         """
         Takes in a tweet and returns the set of unique tags in the tweet.
         """
@@ -162,39 +190,170 @@ class Aggregator:
                 tags.add(word)
         return tags
 
-# display functions:
+    def data(self):
+        """
+        Returns the dataset used in creating the Aggregator.
+        """
+        return self._data
+
     def dem_hashtags(self):
+        """
+        Returns a list of all Democrat-used hashtags.
+        """
         return self._dem_hashtags
 
-    def repub_hashtags(self):
-        return self._repub_hashtags
+    def rep_hashtags(self):
+        """
+        Returns a list of all Republican-used hashtags.
+        """
+        return self._rep_hashtags
 
-    def hashtags(self):
+    def all_hashtags(self):
+        """
+        Returns a list of all hashtags in the dataset.
+        """
         return self._all_hashtags
-    
+
     def dem_tags(self):
+        """
+        Returns a list of all Democrat-used tags.
+        """
         return self._dem_tags
 
-    def repub_tags(self):
-        return self._repub_tags
-    
-    def tags(self):
+    def rep_tags(self):
+        """
+        Returns a list of all Republican-used tags.
+        """
+        return self._rep_tags
+
+    def all_tags(self):
+        """
+        Returns a list of all tags in the dataset.
+        """
         return self._all_tags
 
     def top_ten_words(self):
-        return self._top_ten
-    
+        """
+        Returns a list of the top ten most commonly-used words in the
+        dataset.
+        """
+        return self._top_ten_words
+
     def top_five_words(self):
-        return self._top_ten[0:4]
+        """
+        Returns a list of the top five most commonly-used words in the
+        dataset.
+        """
+        return self._top_ten_words[0:4]
 
-    def dem_top_ten(self):
-        return self._top_ten_dems
+    def dem_top_ten_words(self):
+        """
+        Returns a list of the top ten most commonly-used words in
+        Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_words
 
-    def dem_top_five(self):
-        return self._top_ten_dems[0:4]
-    
-    def repub_top_ten(self):
-        return self._top_ten_reps
+    def dem_top_five_words(self):
+        """
+        Returns a list of the top five most commonly-used words in
+        Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_words[0:4]
 
-    def repub_top_five(self):
-        return self._top_ten_reps[0:4]
+    def rep_top_ten_words(self):
+        """
+        Returns a list of the top ten most commonly-used words in
+        Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_words
+
+    def rep_top_five_words(self):
+        """
+        Returns a list of the top five most commonly-used words in
+        Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_words[0:4]
+
+    def top_ten_hashtags(self):
+        """
+        Returns a list of the top ten most commonly-used hashtags
+        in the dataset.
+        """
+        return self._top_ten_hashtags
+
+    def top_five_hashtags(self):
+        """
+        Returns a list of the top five most commonly-used hashtags
+        in the dataset.
+        """
+        return self._top_ten_hashtags[0:4]
+
+    def dem_top_ten_hashtags(self):
+        """
+        Returns a list of the top ten most commonly-used hashtags
+        in Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_hashtags
+
+    def dem_top_five_hashtags(self):
+        """
+        Returns a list of the top five most commonly-used hashtags
+        in Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_hashtags[0:4]
+
+    def rep_top_ten_hashtags(self):
+        """
+        Returns a list of the top ten most commonly-used hashtags
+        in Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_hashtags
+
+    def rep_top_five_hashtags(self):
+        """
+        Returns a list of the top five most commonly-used hashtags
+        in Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_hashtags[0:4]
+
+    def top_ten_tags(self):
+        """
+        Returns a list of the top ten most commonly-used tags in the
+        dataset.
+        """
+        return self._top_ten_tags
+
+    def top_five_tags(self):
+        """
+        Returns a list of the top five most commonly-used tags in the
+        dataset.
+        """
+        return self._top_ten_tags[0:4]
+
+    def dem_top_ten_tags(self):
+        """
+        Returns a list of the top ten most commonly-used tags in
+        Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_tags
+
+    def dem_top_five_tags(self):
+        """
+        Returns a list of the top five most commonly-used tags in
+        Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_tags[0:4]
+
+    def rep_top_ten_tags(self):
+        """
+        Returns a list of the top ten most commonly-used tags in
+        Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_tags
+
+    def rep_top_five_tags(self):
+        """
+        Returns a list of the top five most commonly-used tags in
+        Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_tags[0:4]
