@@ -10,7 +10,6 @@ Necessary imports:
 - TextBlob --> https://textblob.readthedocs.io/en/dev/install.html
 - collections
 """
-from textblob import TextBlob
 from collections import Counter
 
 
@@ -20,9 +19,7 @@ class Aggregator:
     different aggregate statistics about a dataset of scraped
     tweets from TweetCongress on US Representatives, such as
     the most-used words, hashtags, and tags by the Democratic
-    and Republican parties. The Aggregator casts the column of
-    tweets into TextBlob objects to facilitate natural language
-    processing.
+    and Republican parties.
     """
 
     def __init__(self, data):
@@ -34,25 +31,21 @@ class Aggregator:
           in the dataset and all words, hashtags, and tags that are used
           by both parties.
         - separate lists for the top 10 words, hashtags, and tags that
-          appear in the dataset and all words, hashtags, and tags that
-          are used by both parties.
+          appear in the dataset and the top 10 words, hashtags, and tags
+          that are used by both parties.
         """
-        data = data.dropna()
-        data['text'] = data['text'].apply(TextBlob)
+        data['text'] = data['text'].apply(str)
 
         self._data = data
 
-        self._dem_words = self._get_dem_words(data)
-        self._rep_words = self._get_rep_words(data)
-        self._all_words = self._dem_words.join(self._rep_words)
+        self._dem_words, self._rep_words = self._get_words(data)
+        self._all_words = self._dem_words + self._rep_words
 
         self._dem_hashtags, self._rep_hashtags = self._get_hashtags(data)
-        self._all_hashtags = {'Democrats': self._dem_hashtags,
-                              'Republicans': self._rep_hashtags}
+        self._all_hashtags = self._dem_hashtags + self._rep_hashtags
 
         self._dem_tags, self._rep_tags = self._get_tags(data)
-        self._all_tags = {'Democrats': self._dem_tags,
-                          'Republicans': self._rep_tags}
+        self._all_tags = self._dem_tags + self._rep_tags
 
         self._top_ten_words = self._top_tens(self._all_words)
         self._top_ten_dems_words = self._top_tens(self._dem_words)
@@ -66,29 +59,28 @@ class Aggregator:
         self._top_ten_dems_tags = self._top_tens(self._dem_tags)
         self._top_ten_reps_tags = self._top_tens(self._rep_tags)
 
-    def _get_dem_words(self, data):
+    def _get_words(self, data):
         """
         A helper function to the Aggregator class that takes in the
-        given dataset and returns a list of all the words used by
-        Democratic Representatives in a WordList of TextBlob objects.
+        given dataset and returns two lists, one of Democrat-used
+        words and one of Republican-used words. Words here include
+        hashtags, tags, and other symbols.
         """
-        dems = TextBlob("")
-        dem_data = data[['party'] == 'D'][['text']]
-        for tweet in dem_data:
-            dems.join(tweet)
-        return dems.words
+        dems = []
+        is_dem = data['party'] == 'D'
+        dem_data = data[is_dem]
+        for tweet in dem_data['text']:
+            words = tweet.split()
+            dems.extend(words)
 
-    def _get_rep_words(self, data):
-        """
-        A helper function to the Aggregator class that takes in the
-        given dataset and returns a list of all the words used by
-        Republican Representatives in a WordList of TextBlob objects.
-        """
-        reps = TextBlob("")
-        rep_data = data[['party'] == 'R'][['text']]
-        for tweet in rep_data:
-            reps.join(tweet)
-        return reps.words
+        reps = []
+        is_rep = data['party'] == 'R'
+        rep_data = data[is_rep]
+        for tweet in rep_data['text']:
+            words = tweet.split()
+            reps.extend(words)
+
+        return dems, reps
 
     def _get_hashtags(self, data):
         """
@@ -99,46 +91,46 @@ class Aggregator:
         is_rep = data['party'] == 'R'
         is_dem = data['party'] == 'D'
 
-        rep_tweets = data[is_rep][['text']]
-        dem_tweets = data[is_dem][['text']]
+        rep_data = data[is_rep]
+        dem_data = data[is_dem]
 
-        rep_hashtags = set()
-        dem_hashtags = set()
+        rep_hashtags = []
+        dem_hashtags = []
 
-        for tweet in rep_tweets:
+        for tweet in rep_data['text']:
             hashtags = self.hashtags(tweet)
-            rep_hashtags.update(hashtags)
+            rep_hashtags.extend(hashtags)
 
-        for tweet in dem_tweets:
+        for tweet in dem_data['text']:
             hashtags = self.hashtags(tweet)
-            dem_hashtags.update(hashtags)
+            dem_hashtags.extend(hashtags)
 
-        return list(dem_hashtags), list(rep_hashtags)
+        return dem_hashtags, rep_hashtags
 
     def _get_tags(self, data):
         """
         A helper function to the Aggregator class that takes in the
-        given dataset and returns two lists, one of Democrat-used
-        tags and one of Republican-used tags.
+        given dataset and returns two lists, one of Democrat-used tags
+        and one of Republican-used tags.
         """
-        is_rep = data['party'] == 'R'
         is_dem = data['party'] == 'D'
+        is_rep = data['party'] == 'R'
 
-        rep_tweets = data[is_rep][['text']]
-        dem_tweets = data[is_dem][['text']]
+        dem_data = data[is_dem]
+        rep_data = data[is_rep]
 
-        rep_tags = set()
-        dem_tags = set()
+        dem_tags = []
+        rep_tags = []
 
-        for tweet in rep_tweets:
+        for tweet in dem_data['text']:
             tags = self.tags(tweet)
-            rep_tags.update(tags)
+            dem_tags.extend(tags)
 
-        for tweet in dem_tweets:
+        for tweet in rep_data['text']:
             tags = self.tags(tweet)
-            dem_tags.update(tags)
+            rep_tags.extend(tags)
 
-        return list(dem_tags), list(rep_tags)
+        return dem_tags, rep_tags
 
     def _top_tens(self, field):
         """
@@ -151,12 +143,11 @@ class Aggregator:
         top_10 = Counter(field).most_common(10)
 
         for word in top_10:
-            freq = field.count(word)
-            result[word] = freq
+            result[word[0]] = word[1]
 
         return result
 
-    def most_freq_word_per_tweet(tweet):
+    def most_freq_word_per_tweet(self, tweet):
         """
         Takes in a tweet and returns the most frequently occurring
         word in the tweet.
@@ -171,25 +162,27 @@ class Aggregator:
                 most_freq_word = word
         return most_freq_word
 
-    def hashtags(tweet):
+    def hashtags(self, tweet):
         """
-        Takes in a tweet and returns the set of unique hashtags in the tweet.
+        Takes in a tweet and returns a list of all hashtags in the tweet.
         """
-        hashtags = set()
-        for word in tweet.words:
+        result = []
+        words = tweet.split()
+        for word in words:
             if word[0] == '#':
-                hashtags.add(word)
-        return hashtags
+                result.append(word)
+        return result
 
-    def tags(tweet):
+    def tags(self, tweet):
         """
-        Takes in a tweet and returns the set of unique tags in the tweet.
+        Takes in a tweet and returns the set of all tags in the tweet.
         """
-        tags = set()
-        for word in tweet.words:
+        result = []
+        words = tweet.split()
+        for word in words:
             if word[0] == '@':
-                tags.add(word)
-        return tags
+                result.append(word)
+        return result
 
     def data(self):
         """
