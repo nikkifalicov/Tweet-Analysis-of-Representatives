@@ -198,6 +198,10 @@ def most_used_tags(republicans, democrats, both):
 
 
 def words_results(republicans, democrats, both):
+    """
+    Prints the top 10 words used in all tweets, Democrat tweets,
+    and Republican tweets; along with their frequencies.
+    """
     print("Top 10 Words Across the Board:")
     print(both)
     print()
@@ -210,6 +214,10 @@ def words_results(republicans, democrats, both):
 
 
 def hashtags_results(republicans, democrats, both):
+    """
+    Prints the top 10 hashtags used in all tweets, Democrat tweets,
+    and Republican tweets; along with their frequencies.
+    """
     print("Top 10 Hashtags Across the Board:")
     print(both)
     print()
@@ -222,6 +230,10 @@ def hashtags_results(republicans, democrats, both):
 
 
 def tags_results(republicans, democrats, both):
+    """
+    Prints the top 10 tags used in all tweets, Democrat tweets,
+    and Republican tweets; along with their frequencies.
+    """
     print("Top 10 Tags Across the Board:")
     print(both)
     print()
