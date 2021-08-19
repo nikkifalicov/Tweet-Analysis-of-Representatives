@@ -7,7 +7,6 @@ aggregate statistics about a given dataset describing the tweets of US
 Representatives.
 
 Necessary imports:
-- TextBlob --> https://textblob.readthedocs.io/en/dev/install.html
 - collections
 """
 from collections import Counter
