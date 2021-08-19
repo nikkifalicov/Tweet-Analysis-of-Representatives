@@ -21,24 +21,6 @@ from aggs import Aggregator
 
 DATA = [pd.read_csv('tweet_data1.csv'), pd.read_csv('tweet_data2'),
         pd.read_csv('tweet_data3')]
-ACC_VS_SPLIT = pd.read_csv("accuracy_vs_split_data.csv")
-
-
-def accuracy_vs_split(data):
-    """
-    Takes in data about the training percentage used in the
-    PartyClassifier and corresponding accuracy scores and plots
-    these in a scatter plot. Saves the image to accuracy_vs_split.png.
-    """
-    sns.relplot(data=data, kind='scatter',
-                x='Training Percentage',
-                y='Accuracy Score')
-
-    plt.title("Accuracy Score of Models vs. Percentage Training Data")
-    plt.xlabel("Training Percentage")
-    plt.ylabel("Accuracy Score")
-
-    plt.savefig('accuracy_vs_split.png', bbox_inches='tight')
 
 
 def most_used_words(republicans, democrats, both):
@@ -260,7 +242,6 @@ def main():
     d_top10_words = aggs.dem_top_ten_words()
     all_top10_words = aggs.top_ten_words()
 
-    # accuracy_vs_split(ACC_VS_SPLIT)
     most_used_words(r_top10_words, d_top10_words, all_top10_words)
     most_used_hashtags(r_top10_hashtags, d_top10_hashtags, all_top10_hashtags)
     most_used_tags(r_top10_tags, d_top10_tags, all_top10_tags)
