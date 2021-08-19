@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from aggs import Aggregator
 
 
-DATA = [pd.read_csv('tweet_data1'), pd.read_csv('tweet_data2'),
+DATA = [pd.read_csv('tweet_data1.csv'), pd.read_csv('tweet_data2'),
         pd.read_csv('tweet_data3')]
 ACC_VS_SPLIT = pd.read_csv("accuracy_vs_split_data.csv")
 
@@ -71,22 +71,22 @@ def most_used_words(republicans, democrats, both):
     a = {'word': a_words, 'frequency': a_freqs}
     all = pd.DataFrame(a)
 
-    sns.catplot(data=repubs, x='word', y='frequency', kind='bar')
+    sns.catplot(data=repubs, x='frequency', y='word', kind='bar')
     plt.title("Top 10 Most Frequently Used Words in Republican Tweets")
-    plt.xlabel("Words")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Words")
+    plt.xlabel("Occurrences")
     plt.savefig('rep_top10_words.png', bbox_inches='tight')
 
-    sns.catplot(data=dems, x='word', y='frequency', kind='bar')
+    sns.catplot(data=dems, x='frequency', y='word', kind='bar')
     plt.title("Top 10 Most Frequently Used Words in Democrat Tweets")
-    plt.xlabel("Words")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Words")
+    plt.xlabel("Occurrences")
     plt.savefig('dem_top10_words.png', bbox_inches='tight')
 
-    sns.catplot(data=all, x='word', y='frequency', kind='bar')
+    sns.catplot(data=all, x='frequency', y='word', kind='bar')
     plt.title("Top 10 Most Frequently Used Words in All Tweets")
-    plt.xlabel("Words")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Words")
+    plt.xlabel("Occurrences")
     plt.savefig('all_top10_words.png', bbox_inches='tight')
 
 
@@ -120,22 +120,22 @@ def most_used_hashtags(republicans, democrats, both):
     a = {'hashtag': a_words, 'frequency': a_freqs}
     all = pd.DataFrame(a)
 
-    sns.catplot(data=repubs, x='hashtag', y='frequency', kind='bar')
+    sns.catplot(data=repubs, x='frequency', y='hashtag', kind='bar')
     plt.title("Top 10 Most Frequently Used Hashtags in Republican Tweets")
-    plt.xlabel("Hashtags")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Hashtags")
+    plt.xlabel("Occurrences")
     plt.savefig('rep_top10_hashtags.png', bbox_inches='tight')
 
-    sns.catplot(data=dems, x='hashtag', y='frequency', kind='bar')
+    sns.catplot(data=dems, x='frequency', y='hashtag', kind='bar')
     plt.title("Top 10 Most Frequently Used Hashtags in Democrat Tweets")
-    plt.xlabel("Hashtags")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Hashtags")
+    plt.xlabel("Occurrences")
     plt.savefig('dem_top10_hashtags.png', bbox_inches='tight')
 
-    sns.catplot(data=all, x='hashtag', y='frequency', kind='bar')
+    sns.catplot(data=all, x='frequency', y='hashtag', kind='bar')
     plt.title("Top 10 Most Frequently Used Hashtags in All Tweets")
-    plt.xlabel("Hashtags")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Hashtags")
+    plt.xlabel("Occurrences")
     plt.savefig('all_top10_hashtags.png', bbox_inches='tight')
 
 
@@ -169,23 +169,59 @@ def most_used_tags(republicans, democrats, both):
     a = {'tag': a_words, 'frequency': a_freqs}
     all = pd.DataFrame(a)
 
-    sns.catplot(data=repubs, x='tag', y='frequency', kind='bar')
+    sns.catplot(data=repubs, x='frequency', y='tag', kind='bar')
     plt.title("Top 10 Most Frequently Used Tags in Republican Tweets")
-    plt.xlabel("Tags")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Tags")
+    plt.xlabel("Occurrences")
     plt.savefig('rep_top10_tags.png', bbox_inches='tight')
 
-    sns.catplot(data=dems, x='tag', y='frequency', kind='bar')
+    sns.catplot(data=dems, x='frequency', y='tag', kind='bar')
     plt.title("Top 10 Most Frequently Used Tags in Democrat Tweets")
-    plt.xlabel("Tags")
-    plt.ylabel("Occurrences")
+    plt.ylabel("Tags")
+    plt.xlabel("Occurrences")
     plt.savefig('dem_top10_tags.png', bbox_inches='tight')
 
-    sns.catplot(data=all, x='tag', y='frequency', kind='bar')
+    sns.catplot(data=all, x='frequency', y='tag', kind='bar')
     plt.title("Top 10 Most Frequently Used Tags in All Tweets")
-    plt.xlabel("Tags")
-    plt.ylabel("Occurrences")
-    plt.savefig('dem_top10_tags.png', bbox_inches='tight')
+    plt.ylabel("Tags")
+    plt.xlabel("Occurrences")
+    plt.savefig('all_top10_tags.png', bbox_inches='tight')
+
+
+def words_results(democrats, republicans, both):
+    print("Top 10 Words Across the Board:")
+    print(both)
+    print()
+    print("Top 10 Words in Democrat Tweets:")
+    print(democrats)
+    print()
+    print("Top 10 Words in Republican Tweets")
+    print(republicans)
+    print()
+
+
+def hashtags_results(democrats, republicans, both):
+    print("Top 10 Hashtags Across the Board:")
+    print(both)
+    print()
+    print("Top 10 Hashtags in Democrat Tweets:")
+    print(democrats)
+    print()
+    print("Top 10 Hashtags in Republican Tweets")
+    print(republicans)
+    print()
+
+
+def tags_results(democrats, republicans, both):
+    print("Top 10 Tags Across the Board:")
+    print(both)
+    print()
+    print("Top 10 Tags in Democrat Tweets:")
+    print(democrats)
+    print()
+    print("Top 10 Tags in Republican Tweets")
+    print(republicans)
+    print()
 
 
 def main():
@@ -207,6 +243,10 @@ def main():
     most_used_words(r_top10_words, d_top10_words, all_top10_words)
     most_used_hashtags(r_top10_hashtags, d_top10_hashtags, all_top10_hashtags)
     most_used_tags(r_top10_tags, d_top10_tags, all_top10_tags)
+
+    words_results(r_top10_words, d_top10_words, all_top10_words)
+    hashtags_results(r_top10_hashtags, d_top10_hashtags, all_top10_hashtags)
+    tags_results(r_top10_tags, d_top10_tags, all_top10_tags)
 
 
 if __name__ == '__main__':
