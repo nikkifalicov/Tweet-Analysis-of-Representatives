@@ -197,7 +197,7 @@ def most_used_tags(republicans, democrats, both):
     plt.savefig('all_top10_tags.png', bbox_inches='tight')
 
 
-def words_results(democrats, republicans, both):
+def words_results(republicans, democrats, both):
     print("Top 10 Words Across the Board:")
     print(both)
     print()
@@ -209,7 +209,7 @@ def words_results(democrats, republicans, both):
     print()
 
 
-def hashtags_results(democrats, republicans, both):
+def hashtags_results(republicans, democrats, both):
     print("Top 10 Hashtags Across the Board:")
     print(both)
     print()
@@ -221,7 +221,7 @@ def hashtags_results(democrats, republicans, both):
     print()
 
 
-def tags_results(democrats, republicans, both):
+def tags_results(republicans, democrats, both):
     print("Top 10 Tags Across the Board:")
     print(both)
     print()
