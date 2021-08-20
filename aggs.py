@@ -7,6 +7,7 @@ aggregate statistics about a given dataset describing the tweets of US
 Representatives.
 
 Necessary imports:
+- TextBlob --> https://textblob.readthedocs.io/en/dev/install.html
 - collections
 """
 from collections import Counter
@@ -232,12 +233,26 @@ class Aggregator:
         """
         return self._top_ten_words
 
+    def top_five_words(self):
+        """
+        Returns a list of the top five most commonly-used words in the
+        dataset.
+        """
+        return self._top_ten_words[0:4]
+
     def dem_top_ten_words(self):
         """
         Returns a list of the top ten most commonly-used words in
         Democratic Representatives' tweets.
         """
         return self._top_ten_dems_words
+
+    def dem_top_five_words(self):
+        """
+        Returns a list of the top five most commonly-used words in
+        Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_words[0:4]
 
     def rep_top_ten_words(self):
         """
@@ -246,12 +261,26 @@ class Aggregator:
         """
         return self._top_ten_reps_words
 
+    def rep_top_five_words(self):
+        """
+        Returns a list of the top five most commonly-used words in
+        Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_words[0:4]
+
     def top_ten_hashtags(self):
         """
         Returns a list of the top ten most commonly-used hashtags
         in the dataset.
         """
         return self._top_ten_hashtags
+
+    def top_five_hashtags(self):
+        """
+        Returns a list of the top five most commonly-used hashtags
+        in the dataset.
+        """
+        return self._top_ten_hashtags[0:4]
 
     def dem_top_ten_hashtags(self):
         """
@@ -260,12 +289,26 @@ class Aggregator:
         """
         return self._top_ten_dems_hashtags
 
+    def dem_top_five_hashtags(self):
+        """
+        Returns a list of the top five most commonly-used hashtags
+        in Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_hashtags[0:4]
+
     def rep_top_ten_hashtags(self):
         """
         Returns a list of the top ten most commonly-used hashtags
         in Republican Representatives' tweets.
         """
         return self._top_ten_reps_hashtags
+
+    def rep_top_five_hashtags(self):
+        """
+        Returns a list of the top five most commonly-used hashtags
+        in Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_hashtags[0:4]
 
     def top_ten_tags(self):
         """
@@ -274,6 +317,13 @@ class Aggregator:
         """
         return self._top_ten_tags
 
+    def top_five_tags(self):
+        """
+        Returns a list of the top five most commonly-used tags in the
+        dataset.
+        """
+        return self._top_ten_tags[0:4]
+
     def dem_top_ten_tags(self):
         """
         Returns a list of the top ten most commonly-used tags in
@@ -281,9 +331,23 @@ class Aggregator:
         """
         return self._top_ten_dems_tags
 
+    def dem_top_five_tags(self):
+        """
+        Returns a list of the top five most commonly-used tags in
+        Democratic Representatives' tweets.
+        """
+        return self._top_ten_dems_tags[0:4]
+
     def rep_top_ten_tags(self):
         """
         Returns a list of the top ten most commonly-used tags in
         Republican Representatives' tweets.
         """
         return self._top_ten_reps_tags
+
+    def rep_top_five_tags(self):
+        """
+        Returns a list of the top five most commonly-used tags in
+        Republican Representatives' tweets.
+        """
+        return self._top_ten_reps_tags[0:4]
