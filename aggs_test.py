@@ -14,7 +14,8 @@ from aggs import Aggregator
 import pandas as pd
 import os
 
-# If error, replace with absolute path to tweet_data2
+# If there are errors, replace this relative path with the absolute path of
+# tweet_data2
 DATA = 'tweet_data2'
 
 
