@@ -1,12 +1,10 @@
 """
 Suh Young Choi
 CSE 163 AB
-
 This file creates visualizations of some aggregate statistics
 from the Aggregator created from the full set of TweetCongress
 data. Each set of visualizations is further explained by its
 own documentation.
-
 Necessary imports:
 - seaborn
 - pandas
@@ -21,24 +19,6 @@ from aggs import Aggregator
 
 DATA = [pd.read_csv('tweet_data1'), pd.read_csv('tweet_data2'),
         pd.read_csv('tweet_data3')]
-ACC_VS_SPLIT = pd.read_csv("accuracy_vs_split_data.csv")
-
-
-def accuracy_vs_split(data):
-    """
-    Takes in data about the training percentage used in the
-    PartyClassifier and corresponding accuracy scores and plots
-    these in a scatter plot. Saves the image to accuracy_vs_split.png.
-    """
-    sns.relplot(data=data, kind='scatter',
-                x='Training Percentage',
-                y='Accuracy Score')
-
-    plt.title("Accuracy Score of Models vs. Percentage Training Data")
-    plt.xlabel("Training Percentage")
-    plt.ylabel("Accuracy Score")
-
-    plt.savefig('accuracy_vs_split.png', bbox_inches='tight')
 
 
 def most_used_words(republicans, democrats, both):
@@ -50,7 +30,6 @@ def most_used_words(republicans, democrats, both):
                occurrences across all Democrat tweets.
     both: a list of the 10 most-commonly used words across all
           tweets, regardless of party.
-
     Plots these counts as categorical plots in three images, respectively:
         - rep_top10_words.png
         - dem_top10_words.png
@@ -102,7 +81,6 @@ def most_used_hashtags(republicans, democrats, both):
                occurrences across all Democrat tweets.
     both: a list of the 10 most-commonly used hashtags across all
           tweets, regardless of party.
-
     Plots these counts as categorical plots in three images, respectively:
         - rep_top10_hashtags.png
         - dem_top10_hashtags.png
@@ -154,7 +132,6 @@ def most_used_tags(republicans, democrats, both):
                occurrences across all Democrat tweets.
     both: a list of the 10 most-commonly used tags across all
           tweets, regardless of party.
-
     Plots these counts as categorical plots in three images, respectively:
         - rep_top10_tags.png
         - dem_top10_tags.png
@@ -260,7 +237,6 @@ def main():
     d_top10_words = aggs.dem_top_ten_words()
     all_top10_words = aggs.top_ten_words()
 
-    # accuracy_vs_split(ACC_VS_SPLIT)
     most_used_words(r_top10_words, d_top10_words, all_top10_words)
     most_used_hashtags(r_top10_hashtags, d_top10_hashtags, all_top10_hashtags)
     most_used_tags(r_top10_tags, d_top10_tags, all_top10_tags)
@@ -268,15 +244,6 @@ def main():
     words_results(r_top10_words, d_top10_words, all_top10_words)
     hashtags_results(r_top10_hashtags, d_top10_hashtags, all_top10_hashtags)
     tags_results(r_top10_tags, d_top10_tags, all_top10_tags)
-
-    data = aggs.data()
-    is_rep = data['party'] == 'R'
-    is_dem = data['party'] == 'D'
-
-    print("Republicans:")
-    print(len(data[is_rep]))
-    print("Democrats:")
-    print(len(data[is_dem]))
 
 
 if __name__ == '__main__':
