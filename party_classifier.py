@@ -32,7 +32,7 @@ class PartyClassifier:
         initializes a new PartyClassifier object. Takes in a pandas dataframe,
         data, containing scraped tweet data.
         """
-        self._data = data.dropna().copye()
+        self._data = data.dropna().copy()
         text = self._data['text']
         self._data.loc[:, 'polarity'] = text.apply(
             lambda x: TextBlob(x).sentiment.polarity)
