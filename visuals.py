@@ -19,7 +19,9 @@ from aggs import Aggregator
 import os
 
 
-DATA = 'tweet_data'
+# If there are errors, replace this relative path with the absolute path of
+# tweet_data.csv
+DATA = 'tweet_data.csv'
 
 
 def most_used_words(republicans, democrats, both):
