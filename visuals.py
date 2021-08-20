@@ -10,6 +10,7 @@ Necessary imports:
 - pandas
 - matplotlib.pyplot
 - Aggregator
+- os
 """
 import seaborn as sns
 import pandas as pd
