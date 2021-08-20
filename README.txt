@@ -1,4 +1,3 @@
-# covid-coding-go-brrr
 1. Download GitHub repository
 2. Install/import following libraries/packages/methods:
 
