@@ -9,4 +9,4 @@ from textblob import TextBlob
 from operator import itemgetter
 import pandas as pd
 
-3. Run partyclassier.py and visuals.py
+3. Run partyclassifier.py and visuals.py
