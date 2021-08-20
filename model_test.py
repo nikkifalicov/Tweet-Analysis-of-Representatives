@@ -24,32 +24,32 @@ def tweet_test_set():
     results(test, train_acc, test_acc)
 
 
-def tweet_data1_test():
+def tweet_data1_test(data):
     """
-    tweet_data1() prints results from the machine learning
-    model trained on the 'tweet_data1' csv file
+    tweet_data1(data) prints results from the machine learning
+    model trained on the 'tweet_data1' csv data
     """
-    data = PartyClassifier(pd.read_csv('tweet_data1'))
+    data_frame = PartyClassifier(data)
     train_acc, test_acc = data.fit_and_predict_party()
     results(data, train_acc, test_acc)
 
 
-def tweet_data2_test():
+def tweet_data2_test(data):
     """
-    tweet_data2() prints results from the machine
-    learning model trained on the 'tweet_data2' csv file
+    tweet_data2(data) prints results from the machine
+    learning model trained on the 'tweet_data2' csv data
     """
-    data = PartyClassifier(pd.read_csv('tweet_data2'))
+    data_frame = PartyClassifier(data)
     train_acc, test_acc = data.fit_and_predict_party()
     results(data, train_acc, test_acc)
 
 
-def tweet_data3_test():
+def tweet_data3_test(data):
     """
-    tweet_data3() prints results from the machine learning
-    model trained on the 'tweet_data3' csv file
+    tweet_data3(data) prints results from the machine learning
+    model trained on the 'tweet_data3' csv data
     """
-    data = PartyClassifier(pd.read_csv('tweet_data3'))
+    data_frame = PartyClassifier(data)
     train_acc, test_acc = data.fit_and_predict_party()
     results(data, train_acc, test_acc)
 
@@ -117,14 +117,15 @@ def results(data, train_acc, test_acc):
 
 
 def main():
-    tweet_test_set()
-    tweet_data1_test()
-    tweet_data2_test()
-    tweet_data3_test()
-
     tweet_data1 = pd.read_csv('tweet_data1')
     tweet_data2 = pd.read_csv('tweet_data2')
     tweet_data3 = pd.read_csv('tweet_data3')
+
+    tweet_test_set()
+    tweet_data1_test(tweet_data1)
+    tweet_data2_test(tweet_data2)
+    tweet_data3_test(tweet_data3)
+
     data_frames = [tweet_data1, tweet_data2, tweet_data3]
     data = pd.concat(data_frames)
 
@@ -143,3 +144,6 @@ def main():
     print('No Sentiment:')
     no_sentiment(data)
     print()
+
+if __name__ == '__main__':
+    main()
