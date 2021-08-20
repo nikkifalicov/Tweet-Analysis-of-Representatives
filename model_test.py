@@ -126,9 +126,9 @@ def results(data, train_acc, test_acc):
 
 
 def main():
-    tweet_data1 = pd.read_csv(DATA1)
-    tweet_data2 = pd.read_csv(DATA2)
-    tweet_data3 = pd.read_csv(DATA3)
+    tweet_data1 = pd.read_csv(DATA_1)
+    tweet_data2 = pd.read_csv(DATA_2)
+    tweet_data3 = pd.read_csv(DATA_3)
 
     tweet_test_set()
     tweet_data1_test(tweet_data1)
