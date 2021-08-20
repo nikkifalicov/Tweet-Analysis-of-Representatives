@@ -15,9 +15,7 @@ import os
    labeled 'expected results from visuals'.
 
 4. Run model_test.py and visuals.py in the cse163
-   environment in VS Code. Information on setting up the
-   necessary environment can be found here:
-   https://courses.cs.washington.edu/courses/cse163/21su/software.html#vscode
+   environment in VS Code.
    
 NB: There are some spaces indicated in functions that read CSVs for absolute file paths.
     Please update these as necessary and relative to your working directory.
