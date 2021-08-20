@@ -8,7 +8,7 @@ necessary imports:
     - pandas
     - PartyClassifier
 """
-from PartyClassifier import PartyClassifier
+from party_classifier import PartyClassifier
 import pandas as pd
 
 
