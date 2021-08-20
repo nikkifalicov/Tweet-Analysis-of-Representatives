@@ -15,6 +15,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 from aggs import Aggregator
+import os
 
 
 DATA = [pd.read_csv('tweet_data1'), pd.read_csv('tweet_data2'),
@@ -223,6 +224,12 @@ def tags_results(republicans, democrats, both):
 
 
 def main():
+    # replace empty string absolute file path to folder
+    working_directory = os.listdir('')
+    for filename in working_directory:
+        #replace empty string with folder name
+        file = os.path.join('', filename)
+
     aggs = Aggregator(pd.concat(DATA))
 
     r_top10_hashtags = aggs.rep_top_ten_hashtags()
