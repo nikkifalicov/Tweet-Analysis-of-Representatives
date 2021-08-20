@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from aggs import Aggregator
 
 
-DATA = [pd.read_csv('tweet_data1.csv'), pd.read_csv('tweet_data2'),
+DATA = [pd.read_csv('tweet_data1'), pd.read_csv('tweet_data2'),
         pd.read_csv('tweet_data3')]
 ACC_VS_SPLIT = pd.read_csv("accuracy_vs_split_data.csv")
 
