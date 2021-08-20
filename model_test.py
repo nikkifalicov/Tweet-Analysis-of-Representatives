@@ -13,6 +13,7 @@ from party_classifier import PartyClassifier
 import pandas as pd
 import os
 
+
 # if errors, replace relative path with absolute path
 DATA_TEST = 'tweet_test'
 DATA_1 = 'tweet_data1'
