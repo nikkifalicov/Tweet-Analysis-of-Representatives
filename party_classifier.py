@@ -1,108 +1,145 @@
 """
 Nikki Falicov
 CSE 163 AB
-This class takes in scraped TweetCongress data in CSV format, and generates a
-machine learning model to try and predict political party based on the various
-labels present in the dataframe
+This class contains code to test and view results from the machine
+learning model in PartyClassifier.py
 
-Necessary imports:
-- sklearn
-- TextBlob --> https://textblob.readthedocs.io/en/dev/install.html
-- operator
-- pandas
+necessary imports:
+    - pandas
+    - PartyClassifier
 """
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
-from textblob import TextBlob
-from operator import itemgetter
+from PartyClassifier import PartyClassifier
 import pandas as pd
 
 
-class PartyClassifier:
+def tweet_test_set():
     """
-    Uses machine learning to classify tweets from different political
-    representatives during the month of July 2021. Contains functionality
-    to compare different train/test splits and their outcomes, as well as
-    the accuracy score of the model.
+    tweet_test_set() prints results from the machine learning
+    model trained on the 'tweet_test' csv file
     """
+    test_csv = pd.read_csv('tweet_test')
+    test = PartyClassifier(test_csv)
+    print(test.get_column_names())
+    train_acc, test_acc = test.fit_and_predict_party()
+    results(test, train_acc, test_acc)
 
-    def __init__(self, data):
-        """
-        initializes a new PartyClassifier object. Takes in a pandas dataframe,
-        data, containing scraped tweet data.
-        """
-        self._data = data.dropna().copye()
-        text = self._data['text']
-        self._data.loc[:, 'polarity'] = text.apply(
-            lambda x: TextBlob(x).sentiment.polarity)
-        self._data.loc[:, 'subjectivity'] = text.apply(
-            lambda x: TextBlob(x).sentiment.subjectivity)
 
-    def get_column_names(self):
-        """
-        get_column_name() returns the column names within the data of the
-        current PartyClassifier object
-        """
-        return self._data.columns
+def tweet_data1_test():
+    """
+    tweet_data1() prints results from the machine learning
+    model trained on the 'tweet_data1' csv file
+    """
+    data = PartyClassifier(pd.read_csv('tweet_data1'))
+    train_acc, test_acc = data.fit_and_predict_party()
+    results(data, train_acc, test_acc)
 
-    def _compare_outcomes(self):
-        """
-        compare_outcomes() compares outcomes for different train/test splits.
-        Returns a list of tuples in format (accuracy score, split).
-        This list is sorted from greatest to least based on accuracy score
-        on test data. Accuracy score is a float ranging from 0 to 100
-        indicating the percentage of test data classified correctly
-        """
-        # make list of the various test sizes from 0.1 to 0.9
-        test_sizes = [x/10 for x in range(1, 10)]
-        outcomes = []
-        for test_data_size in test_sizes:
-            train_acc, test_acc = self.fit_and_predict_party(
-                test_data_size=test_data_size)
-            outcomes.append((test_acc, test_data_size))
-        sorted_outcomes = sorted(outcomes, key=itemgetter(0), reverse=True)
-        return sorted_outcomes
 
-    def fit_and_predict_party(self, test_data_size=0.2,
-                              include_names=True, include_state=True,
-                              include_sentiment=True):
-        """
-        fit_and_predict_party(test_data_size=0.2, include_names=True
-        , include_state=True, include_sentiment=True) takes
-        in a test data size (b/t 0 and 1 inclusive) and and whether or not
-        to include various features, and returns the accuracy score for
-        training data and testing data, in format training_accuracy,
-        testing_accuracy. The default value for test_data_size is 0.2,
-        indicating a 80%/20% split between training and testing data
-        (respectively). default values for include_names, include_state,
-        and include_sentiment are True. Assumed that only one of include_names
-        ,include_state, and include_sentiment is False at any one given time.
-        """
-        if include_names is False:
-            filtered = self._data.loc[:, ['text', 'party', 'state',
-                                          'polarity', 'subjectivity']]
-        elif include_state is False:
-            filtered = self._data.loc[:, ['name', 'text', 'party',
-                                          'polarity', 'subjectivity']]
-        elif include_sentiment is False:
-            filtered = self._data.loc[:, ['name', 'text', 'party', 'state']]
-        else:
-            filtered = self._data.loc[:, ['name', 'state', 'text', 'party',
-                                          'polarity', 'subjectivity']]
-        filtered = filtered.dropna()
-        features = filtered.loc[:, filtered.columns != 'party']
-        features = pd.get_dummies(features)
-        labels = filtered['party']
+def tweet_data2_test():
+    """
+    tweet_data2() prints results from the machine
+    learning model trained on the 'tweet_data2' csv file
+    """
+    data = PartyClassifier(pd.read_csv('tweet_data2'))
+    train_acc, test_acc = data.fit_and_predict_party()
+    results(data, train_acc, test_acc)
 
-        features_train, features_test, labels_train, labels_test =\
-            train_test_split(features, labels, test_size=test_data_size)
-        model = DecisionTreeClassifier()
-        model.fit(features_train, labels_train)
 
-        pred_train = model.predict(features_train)
-        train_acc = accuracy_score(labels_train, pred_train)
+def tweet_data3_test():
+    """
+    tweet_data3() prints results from the machine learning
+    model trained on the 'tweet_data3' csv file
+    """
+    data = PartyClassifier(pd.read_csv('tweet_data3'))
+    train_acc, test_acc = data.fit_and_predict_party()
+    results(data, train_acc, test_acc)
 
-        pred_test = model.predict(features_test)
-        test_acc = accuracy_score(labels_test, pred_test)
-        return train_acc*100, test_acc*100
+
+def all_tweet_data(csv_data):
+    """
+    all_tweet_data(csv_data) prints results from the machine learning
+    model trained on csv_data resulting from combining tweet_data1,
+    tweet_data2, and tweet_data3. csv_data is a pandas dataframe.
+    """
+    data = PartyClassifier(csv_data)
+    train_acc, test_acc = data.fit_and_predict_party()
+    results(data, train_acc, test_acc)
+
+
+def no_name(csv_data):
+    """
+    no_name(csv_data) returns the training and testing accuracy
+    from a machine learning model trained and tested on the full
+    tweet csv, without names
+    """
+    data = PartyClassifier(csv_data)
+    train_acc, test_acc = data.fit_and_predict_party(include_names=False)
+    print("Testing Accuracy:", test_acc)
+    print("Training Accuracy:", train_acc)
+
+
+def no_state(csv_data):
+    """
+    no_state(csv_data) returns the training and testing accuracy
+    from a machine learning model trained and tested on the full
+    tweet csv, without state
+    """
+    data = PartyClassifier(csv_data)
+    train_acc, test_acc = data.fit_and_predict_party(include_state=False)
+    print("Testing Accuracy:", test_acc)
+    print("Training Accuracy:", train_acc)
+
+
+def no_sentiment(csv_data):
+    """
+    no_sentiment(csv_data) returns the training and testing accuracy
+    from a machine learning model trained and tested on the full
+    tweet csv, without state
+    """
+    data = PartyClassifier(csv_data)
+    train_acc, test_acc = data.fit_and_predict_party(include_sentiment=False)
+    print("Testing Accuracy:", test_acc)
+    print("Training Accuracy:", train_acc)
+
+
+def results(data, train_acc, test_acc):
+    """
+    results(data, train_acc, test_acc)
+    takes in a PartyClassifier object data, as well as training and
+    testing accuracies and prints these results in a more legible format.
+    """
+    print('List of outcomes:')
+    print('\t', data._compare_outcomes())
+    print()
+    print('Accuracy scores:')
+    print('\tTraining accuracy:', train_acc)
+    print('\tTesting accuracy:', test_acc)
+    print()
+
+
+def main():
+    tweet_test_set()
+    tweet_data1_test()
+    tweet_data2_test()
+    tweet_data3_test()
+
+    tweet_data1 = pd.read_csv('tweet_data1')
+    tweet_data2 = pd.read_csv('tweet_data2')
+    tweet_data3 = pd.read_csv('tweet_data3')
+    data_frames = [tweet_data1, tweet_data2, tweet_data3]
+    data = pd.concat(data_frames)
+
+    print('All Data:')
+    all_tweet_data(data)
+    print()
+
+    print('No Names:')
+    no_name(data)
+    print()
+
+    print('No State:')
+    no_state(data)
+    print()
+
+    print('No Sentiment:')
+    no_sentiment(data)
+    print()
