@@ -12,6 +12,7 @@ Necessary imports:
 """
 from aggs import Aggregator
 import pandas as pd
+import os
 
 
 DATA = pd.read_csv('tweet_test2')
@@ -78,6 +79,12 @@ def test_top10s_functions(agg):
 
 
 def main():
+    # replace empty string absolute file path to folder
+    working_directory = os.listdir('')
+    for filename in working_directory:
+        #replace empty string with folder name
+        file = os.path.join('', filename)
+
     agg = Aggregator(DATA)
     print("Aggregator successfully initialized.")
     print()
