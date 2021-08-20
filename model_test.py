@@ -8,7 +8,7 @@ necessary imports:
     - pandas
     - PartyClassifier
 """
-from party_classifier import PartyClassifier
+from PartyClassifier import PartyClassifier
 import pandas as pd
 
 
@@ -30,8 +30,8 @@ def tweet_data1_test(data):
     model trained on the 'tweet_data1' csv data
     """
     data_frame = PartyClassifier(data)
-    train_acc, test_acc = data.fit_and_predict_party()
-    results(data, train_acc, test_acc)
+    train_acc, test_acc = data_frame.fit_and_predict_party()
+    results(data_frame, train_acc, test_acc)
 
 
 def tweet_data2_test(data):
@@ -40,8 +40,8 @@ def tweet_data2_test(data):
     learning model trained on the 'tweet_data2' csv data
     """
     data_frame = PartyClassifier(data)
-    train_acc, test_acc = data.fit_and_predict_party()
-    results(data, train_acc, test_acc)
+    train_acc, test_acc = data_frame.fit_and_predict_party()
+    results(data_frame, train_acc, test_acc)
 
 
 def tweet_data3_test(data):
@@ -50,8 +50,8 @@ def tweet_data3_test(data):
     model trained on the 'tweet_data3' csv data
     """
     data_frame = PartyClassifier(data)
-    train_acc, test_acc = data.fit_and_predict_party()
-    results(data, train_acc, test_acc)
+    train_acc, test_acc = data_frame.fit_and_predict_party()
+    results(data_frame, train_acc, test_acc)
 
 
 def all_tweet_data(csv_data):
