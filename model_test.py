@@ -10,6 +10,7 @@ necessary imports:
 """
 from party_classifier import PartyClassifier
 import pandas as pd
+import os
 
 
 def tweet_test_set():
@@ -117,6 +118,12 @@ def results(data, train_acc, test_acc):
 
 
 def main():
+    # replace empty string absolute file path to folder
+    working_directory = os.listdir('')
+    for filename in working_directory:
+        #replace empty string with folder name
+        file = os.path.join('', filename)
+    
     tweet_data1 = pd.read_csv('tweet_data1')
     tweet_data2 = pd.read_csv('tweet_data2')
     tweet_data3 = pd.read_csv('tweet_data3')
