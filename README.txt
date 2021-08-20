@@ -11,7 +11,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
-3. Run model_test.py and visuals.py in the cse163
+3. To view the plots produced from visuals.py, select the folder
+   labeled 'expected results from visuals'.
+
+4. Run model_test.py and visuals.py in the cse163
    environment in VS Code. Information on setting up the
    necessary environment can be found here:
    https://courses.cs.washington.edu/courses/cse163/21su/software.html#vscode
