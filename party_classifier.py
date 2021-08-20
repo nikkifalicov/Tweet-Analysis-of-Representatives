@@ -88,7 +88,7 @@ class PartyClassifier:
         elif include_sentiment is False:
             filtered = self._data.loc[:, ['name', 'text', 'party', 'state']]
         else:
-            filtered = self._data.loc[:, ['name', 'text' 'state', 'party',
+            filtered = self._data.loc[:, ['name', 'text', 'state', 'party',
                                           'polarity', 'subjectivity']]
         filtered = filtered.dropna()
         features = filtered.loc[:, filtered.columns != 'party']
