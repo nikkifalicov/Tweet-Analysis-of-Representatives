@@ -19,6 +19,7 @@ DATA_TEST = 'tweet_test'
 DATA_1 = 'tweet_data1'
 DATA_2 = 'tweet_data2'
 DATA_3 = 'tweet_data3'
+FULL_DATA = 'tweet_data.csv'
 
 
 def tweet_test_set():
@@ -135,8 +136,7 @@ def main():
     tweet_data2_test(tweet_data2)
     tweet_data3_test(tweet_data3)
 
-    data_frames = [tweet_data1, tweet_data2, tweet_data3]
-    data = pd.concat(data_frames)
+    all_data = pd.read_csv(FULL_DATA)
 
     print('All Data:')
     all_tweet_data(data)
