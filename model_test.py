@@ -13,13 +13,19 @@ from party_classifier import PartyClassifier
 import pandas as pd
 import os
 
+# if errors, replace relative path with absolute path
+DATA_TEST = 'tweet_test'
+DATA_1 = 'tweet_data1'
+DATA_2 = 'tweet_data2'
+DATA_3 = 'tweet_data3'
+
 
 def tweet_test_set():
     """
     tweet_test_set() prints results from the machine learning
     model trained on the 'tweet_test' csv file
     """
-    test_csv = pd.read_csv('tweet_test')
+    test_csv = pd.read_csv(DATA_TEST)
     test = PartyClassifier(test_csv)
     print(test.get_column_names())
     train_acc, test_acc = test.fit_and_predict_party()
@@ -119,15 +125,9 @@ def results(data, train_acc, test_acc):
 
 
 def main():
-    # replace empty string absolute file path to folder
-    working_directory = os.listdir('')
-    for filename in working_directory:
-        #replace empty string with folder name
-        file = os.path.join('', filename)
-    
-    tweet_data1 = pd.read_csv('tweet_data1')
-    tweet_data2 = pd.read_csv('tweet_data2')
-    tweet_data3 = pd.read_csv('tweet_data3')
+    tweet_data1 = pd.read_csv(DATA1)
+    tweet_data2 = pd.read_csv(DATA2)
+    tweet_data3 = pd.read_csv(DATA3)
 
     tweet_test_set()
     tweet_data1_test(tweet_data1)
