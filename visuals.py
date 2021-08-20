@@ -19,8 +19,7 @@ from aggs import Aggregator
 import os
 
 
-DATA = [pd.read_csv('tweet_data1'), pd.read_csv('tweet_data2'),
-        pd.read_csv('tweet_data3')]
+DATA = 'tweet_data'
 
 
 def most_used_words(republicans, democrats, both):
@@ -231,7 +230,7 @@ def main():
         #replace empty string with folder name
         file = os.path.join('', filename)
 
-    aggs = Aggregator(pd.concat(DATA))
+    aggs = Aggregator(pd.read_csv(DATA))
 
     r_top10_hashtags = aggs.rep_top_ten_hashtags()
     d_top10_hashtags = aggs.dem_top_ten_hashtags()
