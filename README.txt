@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score
 from textblob import TextBlob
 from operator import itemgetter
 import pandas as pd
+import seaborn as sns
 
 3. Run partyclassifier.py and visuals.py in the cse163
    environment in VS Code. Information on setting up the
