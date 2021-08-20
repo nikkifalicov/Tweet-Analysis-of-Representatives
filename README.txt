@@ -13,3 +13,6 @@ import seaborn as sns
    environment in VS Code. Information on setting up the
    necessary environment can be found here:
    https://courses.cs.washington.edu/courses/cse163/21su/software.html#vscode
+   
+NB: There are spaces in every file that requires CSV reads. Please replace these
+    as necessary with the file and folder paths relative to your working directory.
