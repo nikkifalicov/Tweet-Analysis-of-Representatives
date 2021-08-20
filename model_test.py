@@ -24,7 +24,7 @@ def tweet_test_set():
     results(test, train_acc, test_acc)
 
 
-def tweet_data1():
+def tweet_data1_test():
     """
     tweet_data1() prints results from the machine learning
     model trained on the 'tweet_data1' csv file
@@ -34,7 +34,7 @@ def tweet_data1():
     results(data, train_acc, test_acc)
 
 
-def tweet_data2():
+def tweet_data2_test():
     """
     tweet_data2() prints results from the machine
     learning model trained on the 'tweet_data2' csv file
@@ -44,7 +44,7 @@ def tweet_data2():
     results(data, train_acc, test_acc)
 
 
-def tweet_data3():
+def tweet_data3_test():
     """
     tweet_data3() prints results from the machine learning
     model trained on the 'tweet_data3' csv file
@@ -118,9 +118,9 @@ def results(data, train_acc, test_acc):
 
 def main():
     tweet_test_set()
-    tweet_data1()
-    tweet_data2()
-    tweet_data3()
+    tweet_data1_test()
+    tweet_data2_test()
+    tweet_data3_test()
 
     tweet_data1 = pd.read_csv('tweet_data1')
     tweet_data2 = pd.read_csv('tweet_data2')
