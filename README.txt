@@ -8,6 +8,8 @@ from textblob import TextBlob
 from operator import itemgetter
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
+import os
 
 3. Run model_test.py and visuals.py in the cse163
    environment in VS Code. Information on setting up the
