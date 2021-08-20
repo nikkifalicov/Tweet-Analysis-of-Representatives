@@ -139,19 +139,19 @@ def main():
     all_data = pd.read_csv(FULL_DATA)
 
     print('All Data:')
-    all_tweet_data(data)
+    all_tweet_data(all_data)
     print()
 
     print('No Names:')
-    no_name(data)
+    no_name(all_data)
     print()
 
     print('No State:')
-    no_state(data)
+    no_state(all_data)
     print()
 
     print('No Sentiment:')
-    no_sentiment(data)
+    no_sentiment(all_data)
     print()
 
 if __name__ == '__main__':
