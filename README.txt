@@ -16,5 +16,5 @@ import os
    necessary environment can be found here:
    https://courses.cs.washington.edu/courses/cse163/21su/software.html#vscode
    
-NB: There are spaces in every file that requires CSV reads. Please replace these
-    as necessary with the file and folder paths relative to your working directory.
+NB: There are some spaces indicated in functions that read CSVs for absolute file paths.
+    Please update these as necessary and relative to your working directory.
