@@ -7,7 +7,6 @@ learning model in PartyClassifier.py
 necessary imports:
     - pandas
     - PartyClassifier
-    - os
 """
 from party_classifier import PartyClassifier
 import pandas as pd
