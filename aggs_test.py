@@ -1,7 +1,4 @@
 """
-Suh Young Choi
-CSE 163 AB
-
 This file allows a user to view the functions which will be
 later used in visuals.py, and to check that their output is
 correct. This file uses a scaled-down version of the full
