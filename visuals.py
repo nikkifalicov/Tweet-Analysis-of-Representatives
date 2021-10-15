@@ -1,6 +1,4 @@
 """
-Suh Young Choi
-CSE 163 AB
 This file creates visualizations of some aggregate statistics
 from the Aggregator created from the full set of TweetCongress
 data. Each set of visualizations is further explained by its
