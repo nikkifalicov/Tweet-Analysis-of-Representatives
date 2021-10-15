@@ -1,6 +1,4 @@
 """
-Nikki Falicov
-CSE 163 AB
 This class contains code to test and view results from the machine
 learning model in PartyClassifier.py
 
