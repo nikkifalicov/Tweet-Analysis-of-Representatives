@@ -1,7 +1,4 @@
 """
-Raj Kumar
-CSE 163 AB
-
 Implements the Scraper class to webscrape through Tweet Congress's
 dynamically produced website with representative tweets.
 """
