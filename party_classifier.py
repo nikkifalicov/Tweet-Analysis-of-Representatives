@@ -1,6 +1,4 @@
 """
-Nikki Falicov
-CSE 163 AB
 This class takes in scraped TweetCongress data in CSV format, and generates a
 machine learning model to try and predict political party based on the various
 labels present in the dataframe
