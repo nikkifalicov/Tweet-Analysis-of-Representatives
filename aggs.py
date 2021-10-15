@@ -1,7 +1,4 @@
 """
-Suh Young Choi
-CSE 163 AB
-
 The Aggregator class creates an object which can compute and return
 aggregate statistics about a given dataset describing the tweets of US
 Representatives.
